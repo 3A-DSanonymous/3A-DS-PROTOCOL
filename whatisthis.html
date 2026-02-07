@@ -34,9 +34,9 @@
         .bit {
             position: absolute;
             color: #00aaff;
-            font-size: 14px;
+            font-size: 21px;
             opacity: 0;
-            animation: bitFade 5s linear forwards;
+            animation: bitFade 2s linear forwards;
             text-shadow: 0 0 10px rgba(0, 170, 255, .7);
         }
 
@@ -298,7 +298,7 @@
             bg.appendChild(bit);
             setTimeout(() => bit.remove(), 5000);
         }
-        setInterval(spawnBit, -10);
+        setInterval(spawnBit, 0);
 
         const card = document.getElementById("card");
         const seal = document.getElementById("seal");
@@ -340,7 +340,7 @@
             setTimeout(() => {
                 const w = document.createElement("div");
                 w.className = "welcome";
-                w.textContent = "print(Seja bem-vindo à família 3A DS TIO GERMANO!)";
+                w.textContent = "KERNEL.log(Seja bem-vindo à família 3A DS TITIO GERMANO!)";
                 kernel.appendChild(w);
             }, lines.length * 500 + 600);
         };
