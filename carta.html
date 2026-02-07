@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <title>3A-DS — Carta</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Consolas, monospace;
+        }
+
+        body {
+            background: black;
+            color: #00aaff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #binary-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bit {
+            position: absolute;
+            color: #00aaff;
+            font-size: 14px;
+            opacity: 0;
+            animation: bitFade 5s linear forwards;
+            text-shadow: 0 0 10px rgba(0, 170, 255, .7);
+        }
+
+        @keyframes bitFade {
+            0% {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            15% {
+                opacity: .6
+            }
+
+            85% {
+                opacity: .6
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+        }
+
+
+        .container {
+            width: 920px;
+            max-width: 95%;
+            background: rgba(0, 0, 0, .85);
+            border: 1px solid #00aaff;
+            padding: 36px;
+            box-shadow: 0 0 35px rgba(0, 170, 255, .35);
+            border-radius: 10px;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .header h1 {
+            font-size: 22px
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #ccefff;
+            margin-top: 6px
+        }
+
+
+        .envelope {
+            width: 760px;
+            height: 460px;
+            margin: auto;
+            perspective: 2000px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: 1s;
+        }
+
+        .card.open {
+            transform: rotateX(180deg)
+        }
+
+        .face {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            backface-visibility: hidden;
+            border: 1px solid rgba(0, 170, 255, .15);
+        }
+
+
+        .front {
+            background: #070f14;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .seal {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #00aaff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(0, 170, 255, .45);
+        }
+
+        .dest {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #ccefff
+        }
+
+
+        .inner {
+            background: #050c10;
+            transform: rotateX(180deg);
+            padding: 32px;
+        }
+
+        .paper {
+            height: 100%;
+            border: 1px solid rgba(0, 170, 255, .25);
+            border-radius: 6px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .small-text {
+            font-size: 19px;
+            color: #ccefff;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 26px;
+            color: #00aaff;
+            margin-bottom: 26px;
+            text-align: center;
+        }
+
+
+        .actions {
+            display: flex;
+            gap: 60px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 14px 34px;
+            border: 1px solid #00aaff;
+            background: transparent;
+            color: #00aaff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .primary {
+            background: #00aaff;
+            color: black;
+        }
+
+
+        #recusar {
+            position: relative
+        }
+
+        .hint {
+            position: absolute;
+            top: -26px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            color: #ccefff;
+            opacity: 0;
+            transition: .2s;
+        }
+
+
+        .kernel {
+            display: none;
+            width: 720px;
+            max-width: 95%;
+            background: rgba(0, 0, 0, .85);
+            border: 1px solid #00aaff;
+            padding: 28px;
+            box-shadow: 0 0 35px rgba(0, 170, 255, .4);
+            z-index: 2;
+        }
+
+        .line {
+            font-size: 13px;
+            color: #ccefff;
+            margin-bottom: 6px;
+            opacity: 0;
+            animation: lineIn .4s forwards;
+        }
+
+        @keyframes lineIn {
+            to {
+                opacity: 1
+            }
+        }
+
+        .welcome {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 22px;
+            color: #00aaff;
+            text-shadow: 0 0 18px rgba(0, 170, 255, .6);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="binary-bg"></div>
+
+
+    <div class="container" id="carta">
+        <div class="header">
+            <h1>3A-DS — Correspondência Oficial</h1>
+            <p>Clique no selo para abrir a carta</p>
+        </div>
+
+        <div class="envelope">
+            <div class="card" id="card">
+                <div class="face front">
+                    <div class="seal" id="seal">3A</div>
+                    <div class="dest">Destinatário autorizado</div>
+                </div>
+
+                <div class="face inner">
+                    <div class="paper">
+                        <div class="small-text">Nós do 3A-DS, depois de muitas conversas, risadas e decisões em grupo,
+                            resolvemos fazer este convite de forma sincera.</div>
+                        <div class="question">Você aceita ser nosso Mestre de Turma?</div>
+
+                        <div class="actions">
+                            <button class="btn primary" id="aceitar">Sim</button>
+                            <div>
+                                <button class="btn" id="recusar">Não</button>
+                                <div class="hint" id="hint">o meu irmão do lado é melhor</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="kernel" id="kernel"></div>
+
+    <script>
+        const bg = document.getElementById("binary-bg");
+        function spawnBit() {
+            const bit = document.createElement("div");
+            bit.className = "bit";
+            bit.textContent = Math.random() > .5 ? "1" : "0";
+            bit.style.left = Math.random() * window.innerWidth + "px";
+            bit.style.top = Math.random() * window.innerHeight + "px";
+            bg.appendChild(bit);
+            setTimeout(() => bit.remove(), 5000);
+        }
+        setInterval(spawnBit, -10);
+
+        const card = document.getElementById("card");
+        const seal = document.getElementById("seal");
+        const aceitar = document.getElementById("aceitar");
+        const recusar = document.getElementById("recusar");
+        const hint = document.getElementById("hint");
+        const carta = document.getElementById("carta");
+        const kernel = document.getElementById("kernel");
+
+        seal.onclick = () => card.classList.add("open");
+
+        recusar.onmouseenter = () => {
+            recusar.style.transform = `translate(${Math.random() * 160 - 80}px,${Math.random() * 80 - 40}px)`;
+            hint.style.opacity = 1;
+        };
+        recusar.onmouseleave = () => hint.style.opacity = 0;
+
+        aceitar.onclick = () => {
+            carta.style.display = "none";
+            kernel.style.display = "block";
+
+            const lines = [
+                "[ KERNEL ] Carregando módulos principais...",
+                "[ KERNEL ] Validando permissões...",
+                "[ KERNEL ] Elevação de privilégio confirmada",
+                "[ KERNEL ] Status atualizado: MESTRE_DE_TURMA",
+                "[ KERNEL ] Processo finalizado com êxito"
+            ];
+
+            kernel.innerHTML = "";
+            lines.forEach((t, i) => {
+                const d = document.createElement("div");
+                d.className = "line";
+                d.style.animationDelay = i * 0.5 + "s";
+                d.textContent = t;
+                kernel.appendChild(d);
+            });
+
+            setTimeout(() => {
+                const w = document.createElement("div");
+                w.className = "welcome";
+                w.textContent = "print(Seja bem-vindo à família 3A DS TIO GERMANO!)";
+                kernel.appendChild(w);
+            }, lines.length * 500 + 600);
+        };
+    </script>
+
+</body>
+
+</html>

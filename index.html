@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>3A-DS Protocol</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Consolas, monospace;
+    }
+
+    body {
+      height: 100vh;
+      background: black;
+      color: #00aaff;
+      overflow: hidden;
+    }
+
+
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .loading-text {
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+
+    .progress-container {
+      position: absolute;
+      bottom: 40px;
+      width: 60%;
+      height: 6px;
+      border: 1px solid #00aaff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #00aaff;
+      transition: width 0.2s linear;
+    }
+
+
+    .container {
+      position: relative;
+      z-index: 2;
+      display: none;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+    }
+
+    .container.show {
+      display: flex;
+      animation: fadeUp 1.2s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid #00aaff;
+      padding: 45px 55px;
+      text-align: center;
+      border-radius: 6px;
+      box-shadow: 0 0 25px rgba(0, 170, 255, 0.4);
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 15px;
+      color: #ccefff;
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 12px 35px;
+      font-size: 15px;
+      background: #00aaff;
+      color: black;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00aaff;
+    }
+
+    #loadingScreen {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: .4s;
+    }
+
+    #loadingScreen.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .loadingBox {
+      color: #00aaff;
+      font-size: 18px;
+      letter-spacing: 2px;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: .3
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+
+  <div class="loading">
+    <div class="loading-text" id="loadingText">Loading 3A-DS Files...</div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+
+  <div class="container" id="main">
+    <div class="card">
+      <h1>3A-DS Protocol</h1>
+      <p>Acesso ao DS-KERNEL autorizado.<br>Iniciar procedimento.</p>
+      <button onclick="irParaFormulario()">Entrar</button>
+    </div>
+  </div>
+
+  <div id="loadingScreen">
+    <div class="loadingBox">
+      <span>Loading</span>
+    </div>
+  </div>
+
+
+  <script>
+    const loadingText = document.getElementById("loadingText");
+    const loading = document.querySelector(".loading");
+    const main = document.getElementById("main");
+    const progressBar = document.getElementById("progressBar");
+
+    const steps = [
+      "Loading 3A-DS Files...",
+      "Initializing 3A-DS Directories",
+      "Mounting 3A-DS System",
+      "3A-DS Framework",
+      "3A-DS PROTOCOL LOADED"
+    ];
+
+    let stepIndex = 0;
+    let progress = 0;
+
+    // textos
+    const textInterval = setInterval(() => {
+      loadingText.textContent = steps[stepIndex];
+      stepIndex++;
+      if (stepIndex === steps.length) clearInterval(textInterval);
+    }, 1800);
+
+
+    const progressInterval = setInterval(() => {
+      if (progress < 100) {
+        progress++;
+        progressBar.style.width = progress + "%";
+      } else {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          loading.style.display = "none";
+          main.classList.add("show");
+        }, 400);
+      }
+    }, 100);
+
+    function irParaFormulario() {
+      window.location.href = "formulario.html";
+    }
+    function irParaFormulario() {
+      const loading = document.getElementById("loadingScreen");
+
+      loading.classList.add("show");
+
+      setTimeout(() => {
+        window.location.href = "formulario.html";
+      }, 1500);
+    }
+
+  </script>
+
+</body>
+
+</html>
