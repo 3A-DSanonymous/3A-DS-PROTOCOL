@@ -18,6 +18,9 @@
             background: black;
             color: #00aaff;
             padding: 40px 0;
+            overflow-x: hidden;
+            overflow-y: scroll;
+
         }
 
         .container {
@@ -30,12 +33,10 @@
             padding: 40px;
             box-shadow: 0 0 25px rgba(0, 170, 255, .35);
 
-
             opacity: 0;
             transform: translateY(25px);
             transition: 1s ease;
         }
-
 
         .container.show {
             opacity: 1;
@@ -67,6 +68,12 @@
             background: black;
             border: 1px solid #00aaff;
             color: #00aaff;
+            outline: none;
+        }
+
+
+        input[type="date"] {
+            cursor: pointer;
         }
 
         .options {
@@ -149,7 +156,6 @@
             box-shadow: 0 0 30px rgba(0, 170, 255, .7);
         }
 
-        /* FUNDO BINÁRIO-pra deixar fodastico */
         #binary-bg {
             position: fixed;
             inset: 0;
@@ -165,6 +171,7 @@
             opacity: 0;
             animation: bitFade 1.5s linear forwards;
             text-shadow: 0 0 10px rgba(0, 170, 255, .7);
+            will-change: transform, opacity;
         }
 
         @keyframes bitFade {
@@ -186,6 +193,45 @@
                 transform: translateY(-10px);
             }
         }
+
+
+        .date-wrap {
+            position: relative;
+        }
+
+        .date-overlay {
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            cursor: pointer;
+            z-index: 3; 
+        }
+
+  
+        .bolo-extra {
+            overflow: hidden;
+            height: 0;
+            opacity: 0;
+            transition: height .22s ease, opacity .2s ease, margin-top .22s ease;
+            margin-top: 0;
+        }
+
+        .bolo-extra.show {
+            height: 44px; 
+            opacity: 1;
+            margin-top: 6px;
+        }
+
+
+        #boloOutro {
+            width: 100%;
+            padding: 10px;
+            background: black;
+            border: 1px solid #00aaff;
+            color: #00aaff;
+            box-sizing: border-box;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -196,7 +242,7 @@
     <div class="container">
         <h1>3A-DS Protocol</h1>
         <div class="subtitle">
-            DS-KERNEL :: LOGIN() </br>
+            DS-KERNEL :: LOGIN() <br>
             access.level = PENDING
         </div>
 
@@ -204,17 +250,27 @@
         <input type="text" id="nome" placeholder="Nome do admin">
 
         <label>Data do login</label>
-        <input type="date" id="data">
+
+        <div class="date-wrap" style="margin-bottom:6px;">
+            <input type="date" id="data">
+            <div class="date-overlay" id="dateOverlay" aria-hidden="true"></div>
+        </div>
 
         <label>Bólo favorito</label>
-        <select id="bolo">
+        <select id="bolo" onchange="mostrarOutro()">
             <option value="">Selecione</option>
             <option>Mulango</option>
             <option>Chacolate</option>
             <option>Cenauro</option>
-            <option>Bólo de Bólo</option>
-            <option>N.D.A</option>
+            <option>Milhow</option>
+            <option value="outro">Outro</option>
         </select>
+
+        
+        <div class="bolo-extra" id="boloExtra">
+            <input type="text" id="boloOutro" placeholder="Digite outro bolo...">
+        </div>
+
 
         <label>Deseja receber mensagens da turma?</label>
         <div class="options">
@@ -235,14 +291,16 @@
     </div>
 
     <script>
-
         window.addEventListener("load", () => {
             document.querySelector(".container").classList.add("show");
         });
 
         const nome = document.getElementById("nome");
         const data = document.getElementById("data");
+        const dateOverlay = document.getElementById("dateOverlay");
         const bolo = document.getElementById("bolo");
+        const boloExtraWrap = document.getElementById("boloExtra");
+        const boloOutro = document.getElementById("boloOutro");
         const btn = document.getElementById("submitBtn");
         const area = document.getElementById("area");
         const speech = document.getElementById("speech");
@@ -263,12 +321,14 @@
             });
         });
 
-        [nome, data, bolo].forEach(el => {
+        [nome, data, bolo, boloOutro].forEach(el => {
             el.addEventListener("input", checar);
         });
 
         function checar() {
-            if (nome.value && data.value && bolo.value && mensagem && !completo) {
+
+            const boloVal = (bolo.value === "outro") ? (boloOutro.value.trim() !== "") : (bolo.value !== "");
+            if (nome.value.trim() && data.value && boloVal && mensagem && !completo) {
                 completo = true;
                 iniciarFuga();
             }
@@ -309,6 +369,7 @@
 
         btn.addEventListener("click", () => {
             if (!liberado) {
+                alert("Complete o protocolo.");
                 return;
             }
 
@@ -322,7 +383,38 @@
         notification.addEventListener("click", () => {
             window.location.href = "whatisthis.html";
         });
+
+        
+        dateOverlay.addEventListener("click", (e) => {
+            
+            if (typeof data.showPicker === "function") {
+                data.showPicker();
+            } else {
+                
+                data.focus();
+                try {
+                    data.click();
+                } catch (err) {}
+            }
+        });
+
+    
+        function mostrarOutro() {
+            if (bolo.value === "outro") {
+                boloExtraWrap.classList.add("show");
+                
+                checar();
+            } else {
+                boloExtraWrap.classList.remove("show");
+                boloOutro.value = "";
+                
+                if (completo) {
+                    completo = false;
+                }
+            }
+        }
     </script>
+
     <script>
         const binaryBg = document.getElementById("binary-bg");
 
@@ -337,11 +429,12 @@
             binaryBg.appendChild(bit);
 
             setTimeout(() => {
-                bit.remove();
+                if (bit.parentNode) bit.parentNode.removeChild(bit);
             }, 5000);
         }
 
-        setInterval(spawnBit, 0);
+        const BIN_INTERVAL = 0;
+        setInterval(spawnBit, BIN_INTERVAL);
     </script>
 
 
