@@ -202,15 +202,16 @@
         }
 
         .hint {
-            position: absolute;
-            top: -26px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed;
             font-size: 13px;
             color: #ccefff;
             opacity: 0;
-            transition: .2s;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            z-index: 9999;
         }
+
+
 
 
         .kernel {
@@ -256,7 +257,7 @@
     <div class="container" id="carta">
         <div class="header">
             <h1>3A-DS — Correspondência Oficial</h1>
-            <p>Clique no selo para abrir a carta</p>
+            <p>Clique no selo para abrir a mensagem</p>
         </div>
 
         <div class="envelope">
@@ -276,7 +277,7 @@
                             <button class="btn primary" id="aceitar">Sim</button>
                             <div>
                                 <button class="btn" id="recusar">Não</button>
-                                <div class="hint" id="hint">o meu irmão do lado é melhor</div>
+                                <div class="hint" id="hint">Sai daê rapaz, clica no Sim</div>
                             </div>
                         </div>
                     </div>
@@ -311,11 +312,20 @@
 
         seal.onclick = () => card.classList.add("open");
 
+        let hintTimer;
+
         recusar.onmouseenter = () => {
-            recusar.style.transform = `translate(${Math.random() * 160 - 80}px,${Math.random() * 80 - 40}px)`;
+            recusar.style.transform =
+                `translate(${Math.random() * 250 - 80}px, ${Math.random() * 80 - 40}px)`;
+
             hint.style.opacity = 1;
+
+            clearTimeout(hintTimer);
+            hintTimer = setTimeout(() => {
+                hint.style.opacity = 0;
+            }, 1000);
         };
-        recusar.onmouseleave = () => hint.style.opacity = 0;
+
 
         aceitar.onclick = () => {
             carta.style.display = "none";
