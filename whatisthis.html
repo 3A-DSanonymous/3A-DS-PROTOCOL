@@ -331,13 +331,20 @@
             carta.style.display = "none";
             kernel.style.display = "block";
 
+            const dataLogin = localStorage.getItem("dataLogin") || "Não informado";
+            const boloFavorito = localStorage.getItem("boloFavorito") || "Não informado";
+
             const lines = [
                 "[ KERNEL ] Carregando módulos principais...",
                 "[ KERNEL ] Validando permissões...",
+                `[ KERNEL ] Data de login registrada: ${dataLogin}`,
+                `[ KERNEL ] Preferência alimentar detectada: ${boloFavorito}`,
                 "[ KERNEL ] Elevação de privilégio confirmada",
                 "[ KERNEL ] Status atualizado: MESTRE_DE_TURMA",
                 "[ KERNEL ] Processo finalizado com êxito"
             ];
+
+
 
             kernel.innerHTML = "";
             lines.forEach((t, i) => {

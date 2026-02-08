@@ -205,10 +205,10 @@
             inset: 0;
             background: transparent;
             cursor: pointer;
-            z-index: 3; 
+            z-index: 3;
         }
 
-  
+
         .bolo-extra {
             overflow: hidden;
             height: 0;
@@ -218,7 +218,7 @@
         }
 
         .bolo-extra.show {
-            height: 44px; 
+            height: 44px;
             opacity: 1;
             margin-top: 6px;
         }
@@ -233,6 +233,8 @@
             box-sizing: border-box;
             height: 100%;
         }
+
+
     </style>
 </head>
 
@@ -267,7 +269,7 @@
             <option value="outro">Outro</option>
         </select>
 
-        
+
         <div class="bolo-extra" id="boloExtra">
             <input type="text" id="boloOutro" placeholder="Digite outro bolo...">
         </div>
@@ -290,7 +292,6 @@
         <strong>Nova Mensagem do 3A-DS</strong>
         <p>Clique para visualizar.</p>
     </div>
-
     <script>
         window.addEventListener("load", () => {
             document.querySelector(".container").classList.add("show");
@@ -381,33 +382,35 @@
         });
 
         notification.addEventListener("click", () => {
+            salvarDados(); // 👈 SALVA AQUI
             window.location.href = "whatisthis.html";
         });
 
-        
+
+
         dateOverlay.addEventListener("click", (e) => {
-            
+
             if (typeof data.showPicker === "function") {
                 data.showPicker();
             } else {
-                
+
                 data.focus();
                 try {
                     data.click();
-                } catch (err) {}
+                } catch (err) { }
             }
         });
 
-    
+
         function mostrarOutro() {
             if (bolo.value === "outro") {
                 boloExtraWrap.classList.add("show");
-                
+
                 checar();
             } else {
                 boloExtraWrap.classList.remove("show");
                 boloOutro.value = "";
-                
+
                 if (completo) {
                     completo = false;
                 }
@@ -435,8 +438,24 @@
 
         const BIN_INTERVAL = 0;
         setInterval(spawnBit, BIN_INTERVAL);
+
+        function salvarDados() {
+            const dataLogin = data.value || "";
+
+            let boloFinal = "";
+            if (bolo.value === "outro") {
+                boloFinal = boloOutro.value.trim();
+            } else {
+                boloFinal = bolo.value;
+            }
+
+            localStorage.setItem("dataLogin", dataLogin);
+            localStorage.setItem("boloFavorito", boloFinal);
+        }
+
     </script>
 
 
 </body>
+
 </html>
