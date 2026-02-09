@@ -219,7 +219,7 @@
       loadingText.textContent = steps[stepIndex];
       stepIndex++;
       if (stepIndex === steps.length) clearInterval(textInterval);
-    }, 900);
+    }, 1500);
 
 
     const progressInterval = setInterval(() => {
@@ -233,7 +233,7 @@
           main.classList.add("show");
         }, 400);
       }
-    }, 50);
+    }, 90);
 
     function irParaFormulario() {
       window.location.href = "formulario.html";
